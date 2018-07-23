@@ -5,9 +5,14 @@
     <hr><br>
     <article>
 
-        <i class="clock"></i><time data-time="{{ post.timestamp }}" class="distime" datetime="{{ post.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}">{{ post.timestamp.strftime('%Y-%b-%d %H:%M:%S') }}</time> <a href="{{ url_for('view_post', post_id=post.id) }}" class="view">View</a>
-        <div class="post">
-            {{ post.content }}
+        <i class="clock">Timestamp:</i><time data-time="{{ post.timestamp }}" class="distime" datetime="{{ post.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}">{{ post.timestamp.strftime('%Y-%b-%d %H:%M:%S') }}</time> <a href="{{ url_for('view_post', post_id=post.id) }}" class="view">View</a>
+        {% if singular %}
+        <br><a href="{{ url_for('delete', post_id=post.id) }}" class="delete">Delete Entry</a>
+        
+        {% endif %}
+        <div class="post"><h3>{{ post.title }}</h3>
+            <p>{{ post.learned }}</p>
+            <h5>{{ post.resources }}</h5>
         </div>
     </article><br>
     {% endfor %}

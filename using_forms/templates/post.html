@@ -4,6 +4,7 @@
 {% block content %}
     <form method="POST" action="">
         {{ form.hidden_tag() }}
+        <!-- hidden_tag() allows printing multiple hidden forms in 1 block, according to the docs.  Not 100% sure what that means. -->
         {% for field in form %}
             {{ render_field(field) }}
         {% endfor %}

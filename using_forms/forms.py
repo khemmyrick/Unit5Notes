@@ -54,5 +54,12 @@ class LoginForm(Form):
     password = PasswordField('Password', validators=[DataRequired()])
 
 class PostForm(Form):
-    content = TextAreaField("What's up?",
+    """Only form called.
+    Populates form with prompt for user.
+    Checks for data while accepting submission."""
+    title = StringField("Title",
+                        validators=[DataRequired()])
+    learned = TextAreaField("What did you learn?",
                             validators=[DataRequired()])
+    resources = TextAreaField("Resources to remember?",
+                              validators=[DataRequired()])

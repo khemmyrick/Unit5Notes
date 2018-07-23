@@ -3,7 +3,11 @@
 2. I can currently read and write to a peewee db from a Flask template.
 3. Flask app currently populates an html file with the contents of the db.
 
+# Just did:
+1. Added text elements (title, learned, resources) to models, forms and html templates.
+
 # Next steps:
-1. Password protection or simplest possible user  model.
-2. Adding elements to entry model.
-3. Documenting which specific modules are needed to make app work.
+1. Adding elements to entry model.
+2. Add edit functionality.
+3. Password protection or simplest possible user  model.
+4. Documenting which specific modules are needed to make app work.

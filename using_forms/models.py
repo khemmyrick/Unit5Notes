@@ -1,5 +1,4 @@
 import datetime
-import datetime
 
 from flask.ext.bcrypt import generate_password_hash
 from flask.ext.login import UserMixin
@@ -60,8 +59,13 @@ class User(UserMixin, Model):
             raise ValueError("User already exists")
             
 class Post(Model):
+    """Model class is a TextField and a DateTimeField.
+    order_by is set to '-timestamp', reverse timestamp order.
+    Meaning when Post.select() is called, the latest entry shows up first."""
     timestamp = DateTimeField(default=datetime.datetime.now)
-    content = TextField()
+    title = CharField()
+    learned = TextField()
+    resources = TextField()
 
     class Meta:
         database = DATABASE
@@ -78,6 +82,7 @@ class Post(Model):
 #        )
 
 def initialize():
+    """Call the connect(), create_tables() and close() method on our db."""
     DATABASE.connect()
     DATABASE.create_tables([Post], safe=True)
     DATABASE.close()
