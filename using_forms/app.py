@@ -4,16 +4,16 @@ from models import Entry
 import forms
 
 app = Flask(__name__)
+app.secret_key = 'ouh43outho34hfierhf98eh0384hoi43e'
 
 
 @app.route('/')  # The route CALLS the function.
-@app.route('/<name>')  # '/' or '/<name>' calls the index function.
-def index(name="the Crystal Gems"):
+def index():
     log = Entry.select()
-    return render_template("index.html", log=log, name=name)
+    return render_template("index.html", log=log)
 
 
-@app.route('/new', methods=['POST'])  # Called from within a webpage of a different function.
+@app.route('/new', methods=('GET', 'POST'))  # Called from within a webpage of a different function.
 def new():
     form = forms.PostEntry()
     if form.validate_on_submit():
