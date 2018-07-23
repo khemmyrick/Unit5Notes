@@ -1,22 +1,83 @@
 import datetime
+import datetime
 
+from flask.ext.bcrypt import generate_password_hash
+from flask.ext.login import UserMixin
 from peewee import *
 
+DATABASE = SqliteDatabase('social.db')
 
-db = SqliteDatabase('log.db')
-
-
-class Entry(Model):
-    timestamp = DateTimeField(default=datetime.datetime.now)
-    user_name = CharField(max_length=500)
-    task_name = CharField(max_length=1000)
-    task_minutes = IntegerField(default=0)
-    task_notes = TextField()
+class User(UserMixin, Model):
+    username = CharField(unique=True)
+    email = CharField(unique=True)
+    password = CharField(max_length=100)
+    joined_at = DateTimeField(default=datetime.datetime.now)
+    is_admin = BooleanField(default=False)
 
     class Meta:
-        database = db
+        database = DATABASE
+        order_by = ('-joined_at',)  # Should be tuple, hence comma.
+
+    def get_posts(self):
+        return Post.select().where(Post.user == self)
+
+    def get_stream(self):
+        return Post.select().where(
+            (Post.user << self.following()) |
+            (Post.user == self)
+        )
+    
+    def following(self):
+        """The users that current_user is following."""
+        return (
+            User.select().join(
+                Relationship, on=Relationship.to_user
+            ).where(
+                Relationship.from_user == self
+            )
+        )
+
+    def followers(self):
+        """The users that are following current_user."""
+        return (
+            User.select().join(
+                Relationship, on=Relationship.from_user
+            ).where(
+                Relationship.to_user == self
+            )
+        )
+
+    @classmethod
+    def create_user(cls, username, email, password, admin=False):
+        try:
+            with DATABASE.transaction():
+                cls.create(
+                    username=username,
+                    email=email,
+                    password=generate_password_hash(password),
+                    is_admin=admin)
+        except IntegrityError:
+            raise ValueError("User already exists")
+            
+class Post(Model):
+    timestamp = DateTimeField(default=datetime.datetime.now)
+    content = TextField()
+
+    class Meta:
+        database = DATABASE
+        order_by =  ('-timestamp',)  # Should be tuple, hence comma.
+
+# class Relationship(Model):
+#    # from_user = ForeignKeyField(User, related_name='relationships')
+#    # to_user = ForeignKeyField(User, related_name='related_to')
+
+#    class Meta:
+#        database = DATABASE
+#        indexes = (
+#            (('from_user', 'to_user'), True)
+#        )
 
 def initialize():
-    """Create database and table if they don't exist."""
-    db.connect()
-    db.create_tables([Entry], safe=True)
+    DATABASE.connect()
+    DATABASE.create_tables([Post], safe=True)
+    DATABASE.close()

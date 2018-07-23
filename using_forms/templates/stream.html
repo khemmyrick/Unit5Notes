@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    {% for post in stream %}
+    <hr><br>
+    <article>
+
+        <i class="clock"></i><time data-time="{{ post.timestamp }}" class="distime" datetime="{{ post.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}">{{ post.timestamp.strftime('%Y-%b-%d %H:%M:%S') }}</time> <a href="{{ url_for('view_post', post_id=post.id) }}" class="view">View</a>
+        <div class="post">
+            {{ post.content }}
+        </div>
+    </article><br>
+    {% endfor %}
+{% endblock %}

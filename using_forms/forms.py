@@ -1,32 +1,58 @@
-import datetime
-
 from flask_wtf import Form
-from wtforms import StringField, TextAreaField, IntegerField, DateTimeField
-from wtforms.validators import DataRequired, Regexp, ValidationError
+from wtforms import StringField, PasswordField, TextAreaField
+from wtforms.validators import (DataRequired, Regexp, ValidationError, Email,
+                               Length, EqualTo)
 
 # from models import User
 
 
-class PostEntry(Form):
-    user_name = StringField(
-        'User Name',
+def name_exists(form, field):
+    if User.select().where(User.username == field.data).exists():
+        raise ValidationError('User with that name already exists.')
+
+
+def email_exists(form, field):
+    if User.select().where(User.email == field.data).exists():
+        raise ValidationError('User with that email already exists.')
+
+
+class RegisterForm(Form):
+    username = StringField(
+        'Username',
         validators=[
             DataRequired(),
             Regexp(
-                r'^[a-zA-Z ]+$',
-                message=("User should have first and last name, with space.")
-            )])
-    task_name = StringField(
-        'Task Name',
+                r'^[a-zA-Z0-9_]+$',
+                message=("Username should be one word, letters, "
+                         "numbers, and underscores only.")
+            ),
+            name_exists
+        ])
+    email = StringField(
+        'Email',
         validators=[
             DataRequired(),
-            Regexp(
-                r'^[a-zA-Z0-9_ ]+$',
-                message=("Task name should be letters, numbers,"
-                         "spaces, hyphens and underscores only.")
-            )])
-    timestamp = DateTimeField(default=datetime.datetime.now,
-                              format='%Y-%m-%d %H:%M:%S')
-    task_minutes = IntegerField(default=0)
-    task_notes = TextAreaField('Notes?',
-                               validators=[DataRequired()])
+            Email(),
+            email_exists
+        ])
+    password = PasswordField(
+        'Password',
+        validators=[
+            DataRequired(),
+            Length(min=2),
+            EqualTo('password2', message='Passwords must match')
+        ])
+    password2 = PasswordField(
+        'Confirm Password',
+        validators=[DataRequired()]
+    )
+    
+
+class LoginForm(Form):
+    email = StringField('Email',
+                        validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+
+class PostForm(Form):
+    content = TextAreaField("What's up?",
+                            validators=[DataRequired()])
