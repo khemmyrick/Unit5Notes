@@ -1,5 +1,6 @@
 from flask_wtf import Form
-from wtforms import StringField, PasswordField, TextAreaField
+from wtforms import (StringField, PasswordField, TextAreaField, IntegerField,
+                     DateField)
 from wtforms.validators import (DataRequired, Regexp, ValidationError, Email,
                                Length, EqualTo)
 
@@ -63,3 +64,8 @@ class PostForm(Form):
                             validators=[DataRequired()])
     resources = TextAreaField("Resources to remember?",
                               validators=[DataRequired()])
+    minutes = IntegerField("Minutes spent studying",
+                           validators=[DataRequired()])
+    datestamp = DateField("Date: 1983-07-21",
+                          format='%Y-%m-%d',
+                          validators=[DataRequired()])

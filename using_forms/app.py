@@ -91,15 +91,27 @@ def after_request(response):
 
 
 @app.route('/entry', methods=('GET', 'POST'))
-# @app.route('/entry/edit/<int:post_id>')
+@app.route('/entry/edit/<int:post_id>')
 # @login_required
-def post():  # add post_id=None
+def post(post_id=None):  # add post_id=None
     """Post a new entry to the stream."""
     form = forms.PostForm()  # pass a PostForm instance to form.
-    if form.validate_on_submit():  # Is this checking if the form has valid entries?
+    if post_id and form.validate_on_submit():
+        try:
+            edeet = models.Post.select().where(models.Post.id == post_id).get()
+        except models.DoesNotExist:
+            flash("We got a Does Not Exist error on that post_id.")
+            return redirect(url_for('index'))
+        else:
+            edeet.save()
+            flash("Message saved.", "success")
+            return redirect(url_for('index'))
+    elif form.validate_on_submit():  # Is this checking if the form has valid entries?
         models.Post.create(title=form.title.data,
                            learned=form.learned.data,
-                           resources=form.resources.data)
+                           resources=form.resources.data,
+                           minutes=form.minutes.data,
+                           datestamp=form.datestamp.data)
         # Passes form's content text string to new post's content attribute.
         flash("Message posted. Thanks!", "success")
         # Alerts user that the message posted.  Is working rn.

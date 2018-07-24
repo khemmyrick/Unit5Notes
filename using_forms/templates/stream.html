@@ -5,14 +5,16 @@
     <hr><br>
     <article>
 
-        <i class="clock">Timestamp:</i><time data-time="{{ post.timestamp }}" class="distime" datetime="{{ post.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}">{{ post.timestamp.strftime('%Y-%b-%d %H:%M:%S') }}</time> <a href="{{ url_for('view_post', post_id=post.id) }}" class="view">View</a>
+        <i class="clock">Date:</i><time data-time="{{ post.datestamp }}" class="distime" datetime="{{ post.datestamp.strftime('%Y-%m-%d') }}">{{ post.datestamp.strftime('%Y-%b-%d') }}</time> <a href="{{ url_for('view_post', post_id=post.id) }}" class="view">View</a>
         {% if singular %}
-        <br><a href="{{ url_for('delete', post_id=post.id) }}" class="delete">Delete Entry</a>
+        <br><a href="{{ url_for('post', post_id=post.id) }}">Edit Entry</a><br><a href="{{ url_for('delete', post_id=post.id) }}" class="delete">Delete Entry</a>
         
         {% endif %}
         <div class="post"><h3>{{ post.title }}</h3>
-            <p>{{ post.learned }}</p>
-            <h5>{{ post.resources }}</h5>
+            {% if singular %}
+            <p>What I Learned: {{ post.learned }}</p>
+            <p>Resources: {{ post.resources }}<br>Study Time (in minutes): {{ post.minutes }}</p>
+            {% endif %}
         </div>
     </article><br>
     {% endfor %}

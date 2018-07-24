@@ -60,16 +60,17 @@ class User(UserMixin, Model):
             
 class Post(Model):
     """Model class is a TextField and a DateTimeField.
-    order_by is set to '-timestamp', reverse timestamp order.
+    order_by is set to '-datestamp', reverse datestamp order.
     Meaning when Post.select() is called, the latest entry shows up first."""
-    timestamp = DateTimeField(default=datetime.datetime.now)
+    datestamp = DateField(default=datetime.datetime.today)
     title = CharField()
     learned = TextField()
     resources = TextField()
+    minutes = IntegerField()
 
     class Meta:
         database = DATABASE
-        order_by =  ('-timestamp',)  # Should be tuple, hence comma.
+        order_by =  ('-datestamp',)  # Should be tuple, hence comma.
 
 # class Relationship(Model):
 #    # from_user = ForeignKeyField(User, related_name='relationships')
