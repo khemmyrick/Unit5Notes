@@ -94,7 +94,7 @@ def after_request(response):
 @app.route('/entry/edit/<int:post_id>', methods=('GET', 'POST'))
 # @login_required
 def post(post_id=None):  # add post_id=None
-    """Post a new entry to the stream."""
+    """Add/Edit an entry to the stream."""
     form = forms.PostForm()  # pass a PostForm instance to form.
     if post_id and form.validate_on_submit():
         try:
@@ -111,6 +111,7 @@ def post(post_id=None):  # add post_id=None
             edeet.save()
             flash("Message saved.", "success")
             return redirect(url_for('index'))
+        return render_template('edit.html', form=form)
     elif form.validate_on_submit():  # Is this checking if the form has valid entries?
         models.Post.create(title=form.title.data,
                            learned=form.learned.data,
@@ -121,7 +122,7 @@ def post(post_id=None):  # add post_id=None
         flash("Message posted. Thanks!", "success")
         # Alerts user that the message posted.  Is working rn.
         return redirect(url_for('index'))  # Sends user to main index page.
-    return render_template('post.html', form=form)  # Is this reloading the page we're already on?
+    return render_template('new.html', form=form)  # Is this reloading the page we're already on?
 
 
 @app.route('/')
@@ -129,15 +130,16 @@ def index():
     """Populates stream.html with db posts."""
     stream = models.Post.select().limit(100)
     # Passes first 100 db posts to stream.
-    return render_template('stream.html', stream=stream)  # Renders stream.html and passes stream variable to html file.
+    return render_template('index.html', stream=stream)  # Renders stream.html and passes stream variable to html file.
 
 
 @app.route('/entries')
 def stream():
     """Also renders stream?
     Not sure how this differs from index view."""
-    template = 'stream.html'  # Passes stream.html into template variable.
+    template = 'index.html'  # Passes stream.html into template variable.
     stream = models.Post.select()  # Passes all db posts to stream variable.
+    # Is this step needed for more than one route to point to same page?
     return render_template(template, stream=stream)  # Renders exact same thing as index view?
 
 
@@ -163,7 +165,7 @@ def view_post(post_id):
     if posts.count() == 0:
         abort(404)  # If nothing's there, bring up 404 page.
     singular = True
-    return render_template('stream.html', stream=posts, singular=singular)  # Otherwise, render every post that matches search.
+    return render_template('detail.html', stream=posts, singular=singular)  # Otherwise, render every post that matches search.
 
 
 # @app.route('/follow/<username>')

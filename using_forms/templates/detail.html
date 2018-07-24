@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block title %}{% for post in stream %}{{ super() }} | {{ post.title }}{% endfor %}{% endblock %}
+{% block header %}{% for post in stream %}{{ post.title }}{% endfor %}{% endblock %}
+{% block content %}
+    {% for post in stream %}
+        <section>
+            <div class="container">
+                <div class="entry-list single">
+                    <article>
+                        <h1>{{ post.title }}</h1>
+                        <time datetime="{{ post.datestamp.strftime('%Y-%m-%d') }}">{{ post.datestamp.strftime('%b %d, %Y') }}</time>
+                        <div class="entry">
+                            <p><strong>Time Spent: </strong>
+                            {{ post.minutes }}</p>
+                        </div>
+                        <div class="entry">
+                            <p><strong>What I Learned: </strong>
+                            {{ post.learned }}</p>
+                        </div>
+                        <div class="entry">
+                            <strong>Resources to Remember: </strong>
+                            {{ post.resources }}
+                            <!-- <ul>
+                                <li><a href="">Lorem ipsum dolor sit amet</a></li>
+                                <li><a href="">Cras accumsan cursus ante, non dapibus tempor</a></li>
+                                <li>Nunc ut rhoncus felis, vel tincidunt neque</li>
+                                <li><a href="">Ipsum dolor sit amet</a></li>
+                            </ul> -->
+                        </div>
+                    </article>
+                </div>
+            </div>
+            <div class="edit">
+                <p><a href="{{ url_for('post', post_id=post.id) }}">Edit Entry</a></p>
+            </div>
+            <div class="delete">
+                <p><a href="{{ url_for('delete', post_id=post.id) }}">Delete Entry</a></p>
+            </div>
+        </section>
+    {% endfor %}
+{% endblock %}

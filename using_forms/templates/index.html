@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block content %}
+    <section>
+        <div class="container">
+            <div class="entry-list">
+                {% for post in stream %}
+                    <hr>
+                    <article>
+                        <!-- Generate slugs. -->
+                        <h2>
+                            <a href="{{ url_for('view_post', post_id=post.id)}}" class="view">{{ post.title }}</a>
+                        </h2>
+                        <a href="{{ url_for('view_post', post_id=post.id) }}" class="view"><time datetime="{ post.datestamp.strftime('%Y-%m-%d') }">{{ post.datestamp.strftime('%Y-%m-%d') }}</time><br>View Full Entry</a>
+                        <!-- Insert year/month/day datetime. -->
+                        {% if singular %}
+                        {% endif %}
+                    </article><br>
+                {% endfor %}
+                </div>
+            </div>
+        </section>
+{% endblock %}
