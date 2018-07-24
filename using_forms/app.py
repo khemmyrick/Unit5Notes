@@ -91,7 +91,7 @@ def after_request(response):
 
 
 @app.route('/entry', methods=('GET', 'POST'))
-@app.route('/entry/edit/<int:post_id>')
+@app.route('/entry/edit/<int:post_id>', methods=('GET', 'POST'))
 # @login_required
 def post(post_id=None):  # add post_id=None
     """Post a new entry to the stream."""
@@ -103,6 +103,11 @@ def post(post_id=None):  # add post_id=None
             flash("We got a Does Not Exist error on that post_id.")
             return redirect(url_for('index'))
         else:
+            edeet.title = form.title.data
+            edeet.learned = form.learned.data
+            edeet.resources = form.resources.data
+            edeet.minutes = form.minutes.data
+            edeet.datestamp = form.datestamp.data
             edeet.save()
             flash("Message saved.", "success")
             return redirect(url_for('index'))

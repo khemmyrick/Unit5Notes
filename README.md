@@ -4,12 +4,10 @@
 3. Flask app currently populates an html file with the contents of the db.
 
 # Just did:
-1. Added all basic entry elements elements (title, learned, resources, minutes, datestamp) to models, forms and html templates.
-
-# Working On:
-1. Edit entry functionality.
+1. Added all basic entry elements (title, learned, resources, minutes, datestamp) to models, forms and html templates.
+2. Added edit entry functionality.
 
 # Next steps:
-1. Add edit functionality.
-2. Password protection (and/or simplest possible user  model).
-3. Documenting which specific modules are needed to make app work.
+1. Password protection (and/or simplest possible user  model).
+2. Documenting which specific modules are needed to make app work.
+3. Deploying this code with Project 5 premade template html files.
