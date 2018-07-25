@@ -139,9 +139,8 @@ def post(post_id=None):  # add post_id=None
 def index():
     """Populates stream.html with db posts."""
     stream = models.Post.select().limit(100)
-    pw = g.user
     # Passes first 100 db posts to stream.
-    return render_template('index.html', stream=stream, pw=pw)  # Renders stream.html and passes stream variable to html file.
+    return render_template('index.html', stream=stream)  # Renders stream.html and passes stream variable to html file.
 
 
 @app.route('/entries')
@@ -150,9 +149,8 @@ def stream():
     Not sure how this differs from index view."""
     template = 'index.html'  # Passes stream.html into template variable.
     stream = models.Post.select()  # Passes all db posts to stream variable.
-    pw = g.user
     # Is this step needed for more than one route to point to same page?
-    return render_template(template, stream=stream, pw=pw)  # Renders exact same thing as index view?
+    return render_template(template, stream=stream)  # Renders exact same thing as index view?
 
 
 @app.route('/entries/delete/<int:post_id>')
