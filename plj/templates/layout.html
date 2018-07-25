@@ -13,18 +13,8 @@
     <body>
         <header>
             <div class="container">
-                <div class="site-header"><h1>{% block header %}Greetings!{% endblock %}</h1>
-                    <!--  ***jinja2 if current_user.is_authenticated block starts here***
-                    <a href="***jinja2doublestache url_for('logout') ***" class="icon-power" title="log out"> 
-                    Log Out</a>
-                    ***jinja2 else tag here*** 
-                    <a href="***jinja2doublestache url_for('login') ***" class="icon-power" title="log in">Log In</a>
-                    <a href="***jinja2doublestache url_for('register') ***" class="icon-profile" title="register">Register</a>
-                    *** jinja2 endif for current_user block -->
+                <div class="site-header">{% block header %}<h1>Greetings!</h1>{% endblock %}
                     <a class="logo" href="{{ url_for('index') }}"><i class="material-icons">library_books</i></a>
-                    <!-- jinja2 if current_user.is_authenticated block*** -->
-                    <br><br><a class="button icon-right" href="{{ url_for('post') }}"><span>New Entry</span> <i class="material-icons">add</i></a>
-                    <!-- *** endif *** -->
                 </div>
             </div>
         </header>
