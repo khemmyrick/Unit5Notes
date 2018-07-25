@@ -11,9 +11,10 @@
 2. All entries display in html templates.
 
 # Just did:
-1. Included modified versions of the premade html templates in the package.
+1. Began work on password protection.
+2. App now allows user with a password to login to app for greater access.
 
 # Next steps:
-1. Password protection (and/or simplest possible user  model).
+1. Debug login specific logic in templates.
 2. Documenting which specific modules are needed to make app work.
 3. Conform package around original coding of new.html and edit.html?

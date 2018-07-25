@@ -1,5 +1,5 @@
 from flask import (Flask, g, render_template, flash, redirect, url_for,
-                   abort)
+                   abort, request)
 from flask.ext.bcrypt import check_password_hash
 from flask.ext.login import (LoginManager, login_user, logout_user,
                              login_required, current_user, UserMixin)
@@ -18,6 +18,7 @@ app = Flask(__name__)
 app.secret_key = 'auoesh.bouoastuh.43,uoausoehuosth3ououea.auoub!'
 # A secret key allows the app to create a session, or something?
 # Not sure what that is, or what it means.
+ONOFF = True
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -65,6 +66,12 @@ def after_request(response):
 #    return render_template('register.html', form=form)
 
 
+# @app.route('/login', methods=('GET', 'POST'))
+# def login():
+#    """Verify password."""
+#    form = forms.LoginForm()
+#    
+
 @app.route('/login', methods=('GET', 'POST'))
 def login():
     """Login user."""
@@ -80,12 +87,6 @@ def login():
                 login_user(user)
                 flash("You've been logged in!", "success")
                 return redirect(url_for('index'))
-            else:
-                flash("Your credentials are invalid.", "error")
-                return 'the credential is not matching'
-    # user = models.User.select().get()
-    # login_user(user)
-    # return redirect(url_for('index'))  # Autologin no password page.
     return render_template('login.html', form=form)
 
 
@@ -137,9 +138,9 @@ def post(post_id=None):  # add post_id=None
 def index():
     """Populates stream.html with db posts."""
     stream = models.Post.select().limit(100)
-    current_user = g.user
+    pw = g.user
     # Passes first 100 db posts to stream.
-    return render_template('index.html', stream=stream, current_user=current_user)  # Renders stream.html and passes stream variable to html file.
+    return render_template('index.html', stream=stream, pw=pw)  # Renders stream.html and passes stream variable to html file.
 
 
 @app.route('/entries')
@@ -148,8 +149,9 @@ def stream():
     Not sure how this differs from index view."""
     template = 'index.html'  # Passes stream.html into template variable.
     stream = models.Post.select()  # Passes all db posts to stream variable.
+    pw = g.user
     # Is this step needed for more than one route to point to same page?
-    return render_template(template, stream=stream, current_user=g.user)  # Renders exact same thing as index view?
+    return render_template(template, stream=stream, pw=pw)  # Renders exact same thing as index view?
 
 
 @app.route('/entries/delete/<int:post_id>')

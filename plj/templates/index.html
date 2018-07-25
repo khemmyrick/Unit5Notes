@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block header %}{{ super() }}<br><br>
-    {% if current_user.is_authenticated %}
+    {% if pw.is_authenticated %}
         <h6>You are currently logged-in.</h6>
         <a href="{{ url_for('logout') }}" class="icon-power" title="log out"> 
         Log Out</a>
@@ -9,7 +9,7 @@
         <a href="{{ url_for('login') }}" class="icon-power" title="log in">Log In</a>
     <!-- <a href="***jinja2doublestache url_for('register') ***" class="icon-profile" title="register">Register</a> -->
     {% endif %}
-    {% if current_user.is_authenticated %}
+    {% if pw.is_authenticated %}
     <br><br><a class="button icon-right" href="{{ url_for('post') }}"><span>New Entry</span> <i class="material-icons">add</i></a>
     {% endif %}
 {% endblock %}
