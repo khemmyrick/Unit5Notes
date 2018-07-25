@@ -11,10 +11,9 @@
 2. All entries display in html templates.
 
 # Just did:
-1. Began work on password protection.
-2. App now allows user with a password to login to app for greater access.
+1. Updated templates.  Templates now respond properly to user's login status.
 
 # Next steps:
-1. Debug login specific logic in templates.
+1. Trying app out in my computer console, rather than Treehouse Workspaces.
 2. Documenting which specific modules are needed to make app work.
 3. Conform package around original coding of new.html and edit.html?

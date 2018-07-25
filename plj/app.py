@@ -18,7 +18,6 @@ app = Flask(__name__)
 app.secret_key = 'auoesh.bouoastuh.43,uoausoehuosth3ououea.auoub!'
 # A secret key allows the app to create a session, or something?
 # Not sure what that is, or what it means.
-ONOFF = True
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -87,6 +86,8 @@ def login():
                 login_user(user)
                 flash("You've been logged in!", "success")
                 return redirect(url_for('index'))
+            else:
+                flash("Your credentials are invalid", "error")
     return render_template('login.html', form=form)
 
 
