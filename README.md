@@ -1,4 +1,6 @@
 # Personal Learning Journal with Flask
+The password is "project5"
+
 # Contents:
 1. A flask app.
 2. A templates folder.
