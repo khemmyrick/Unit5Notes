@@ -106,22 +106,26 @@ def logout():
 def post(post_id=None):  # add post_id=None
     """Add/Edit an entry to the stream."""
     form = forms.PostForm()  # pass a PostForm instance to form.
-    if post_id and form.validate_on_submit():
+    if post_id:
         try:
             edeet = models.Post.select().where(models.Post.id == post_id).get()
         except models.DoesNotExist:
             flash("We got a Does Not Exist error on that post_id.")
             return redirect(url_for('index'))
         else:
-            edeet.title = form.title.data
-            edeet.learned = form.learned.data
-            edeet.resources = form.resources.data
-            edeet.minutes = form.minutes.data
-            edeet.datestamp = form.datestamp.data
-            edeet.save()
-            flash("Message saved.", "success")
-            return redirect(url_for('index'))
-        return render_template('edit.html', form=form)
+            if form.validate_on_submit():
+                edeet.title = form.title.data
+                edeet.learned = form.learned.data
+                edeet.resources = form.resources.data
+                edeet.minutes = form.minutes.data
+                edeet.datestamp = form.datestamp.data
+                edeet.save()
+                flash("Message saved.", "success")
+                return redirect(url_for('index'))
+        if edeet:
+            return render_template('edit.html', form=form, edeet=edeet)
+        else:
+            return 'something went wrong'
     elif form.validate_on_submit():  # Is this checking if the form has valid entries?
         models.Post.create(title=form.title.data,
                            learned=form.learned.data,

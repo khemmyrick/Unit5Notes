@@ -70,5 +70,5 @@ class PostForm(Form):
     minutes = IntegerField("Minutes spent studying",
                            validators=[DataRequired()])
     datestamp = DateField("Date: 1983-07-21",
-                          format='%Y-%m-%d',
+                          # format='%Y-%m-%d',
                           validators=[DataRequired()])
