@@ -13,9 +13,8 @@ The password is "project5"
 2. All entries display in html templates.
 
 # Just did:
-1. Updated templates.  Templates now respond properly to user's login status.
+1. Uploaded Treehouse Workspace's Python Requirements Text File, minus certain modules that are not in use.
 
 # Next steps:
-1. Trying app out in my computer console, rather than Treehouse Workspaces.
-2. Documenting which specific modules are needed to make app work.
-3. Conform package around original coding of new.html and edit.html?
+1. Documenting which modules/versions are needed to make app work.
+2. Conform package around original coding of new.html and edit.html?
