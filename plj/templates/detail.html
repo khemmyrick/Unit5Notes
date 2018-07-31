@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}{% for post in stream %}{{ super() }} | {{ post.title }}{% endfor %}{% endblock %}
+{% block title %}{{ super() }} | {% for post in stream %}{{ post.title }}{% endfor %}{% endblock %}
 {% block header %}{% for post in stream %}{{ post.title }}{% endfor %}{% endblock %}
 {% block content %}
     {% for post in stream %}
@@ -16,16 +16,20 @@
                         <div class="entry">
                             <p><strong>What I Learned: </strong>
                             {{ post.learned }}</p>
+                            <!-- <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ut rhoncus felis, vel tincidunt neque.</p>
+                            <p>Cras egestas ac ipsum in posuere. Fusce suscipit, libero id malesuada placerat, orci velit semper metus, quis pulvinar sem nunc vel augue. In ornare tempor metus, sit amet congue justo porta et. Etiam pretium, sapien non fermentum consequat, <a href="">dolor augue</a> gravida lacus, non accumsan. Vestibulum ut metus eleifend, malesuada nisl at, scelerisque sapien.</p> -->
                         </div>
                         <div class="entry">
                             <strong>Resources to Remember: </strong>
                             {{ post.resources }}
-                            <!-- <ul>
+                            <!-- How do I escape (or un-escape) html code in these jinja variables? If i put the jinja variable in a raw block, it'll just print the double stache and the name of the variable, rather than html code.  If I add html code to the string in python/flask and output it that way, jinja or flask auto-escape everything as text to be read by the user, and not the html code.
+                            <ul>
                                 <li><a href="">Lorem ipsum dolor sit amet</a></li>
                                 <li><a href="">Cras accumsan cursus ante, non dapibus tempor</a></li>
                                 <li>Nunc ut rhoncus felis, vel tincidunt neque</li>
                                 <li><a href="">Ipsum dolor sit amet</a></li>
-                            </ul> -->
+                            </ul> 
+                            -->
                         </div>
                     </article>
                 </div>

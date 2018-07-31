@@ -1,8 +1,8 @@
 from flask_wtf import Form
 from wtforms import (StringField, PasswordField, TextAreaField, IntegerField,
                      DateField)
-from wtforms.validators import (DataRequired, Regexp, ValidationError, Email,
-                               Length, EqualTo)
+from wtforms.validators import (DataRequired, Regexp, ValidationError,
+                                Length, EqualTo)
 
 # from models import User
 
@@ -47,12 +47,10 @@ from wtforms.validators import (DataRequired, Regexp, ValidationError, Email,
 #        'Confirm Password',
 #        validators=[DataRequired()]
 #    )
-    
+
 
 class LoginForm(Form):
     """Get password for full site functionality."""
-    # email = StringField('Email',
-    #                    validators=[DataRequired(), Email()])
     password = PasswordField("Password",
                              validators=[DataRequired()])
 
@@ -61,8 +59,12 @@ class PostForm(Form):
     """Only form called.
     Populates form with prompt for user.
     Checks for data while accepting submission."""
-    title = StringField("Title",
-                        validators=[DataRequired()])
+    title = StringField(
+        "Title",
+        validators=[
+            DataRequired(),
+            Length(message='Title should be less than 150 chars.', max=150)
+        ])
     learned = TextAreaField("What did you learn?",
                             validators=[DataRequired()])
     resources = TextAreaField("Resources to remember?",

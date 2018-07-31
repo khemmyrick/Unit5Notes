@@ -14,10 +14,10 @@
                     <input id="datestamp" type="date" name="datestamp"><br>
                     <label for="minutes"> Time Spent</label>
                     <input id="minutes" type="text" name="minutes" placeholder="{{ form.minutes.label.text }}"><br>
-                    <label for="learned">What I Learned</label>
-                    <textarea id="learned" rows="5" name="learned">{{ form.learned.label.text }}</textarea>
+                    <label for="learned">What I Learned</label><!-- <h5> (To add a link, type "[" followed by the URL, a space, a description of what's being linked to, and finally "]".)</h5> -->
+                    <textarea id="learned" rows="5" name="learned" placeholder="{{ form.learned.label.text }}"></textarea>
                     <label for="resources">Resources to Remember</label>
-                    <textarea id="resources" rows="5" name="resources">{{ form.resources.label.text }}</textarea>
+                    <textarea id="resources" rows="5" name="resources" placeholder="{{ form.resources.label.text }}"></textarea>
                     <!-- <label for="tags"> Tags (N/A)</label>
                     <input id="tags" type="text" name="tags"><br> Tags isn't in my form model.-->
                     <button type="submit" id="submit">Publish Entry!</button>

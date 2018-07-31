@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block title %}{{ super() }} | Edit Entry{% endblock %}
+{% block style %}<link rel="stylesheet" href="../../static/css/site.css">{% endblock %}
 {% block content %}
     <section>
         <div class="container">
@@ -10,15 +11,15 @@
                     <!-- 1. Needed hidden_tag for form validation.
                     2. Also needed name fields to match form attributes. -->
                     <label for="title"> Title</label>
-                    <input id="title" type="text" name="title" placeholder="{{ edeet.title }}"><br>
+                    <input id="title" type="text" name="title" value="{{ edeet.title }}"><br>
                     <label for="datestamp">Date</label>
-                    <input id="datestamp" type="date" name="datestamp"><br>
+                    <input id="datestamp" type="date" name="datestamp" value="{{ edeet.datestamp }}"><br>
                     <label for="minutes"> Time Spent</label>
-                    <input id="minutes" type="text" name="minutes" placeholder="{{ edeet.minutes }}"><br>
+                    <input id="minutes" type="text" name="minutes" value="{{ edeet.minutes }}"><br>
                     <label for="learned">What I Learned</label>
-                    <textarea id="learned" rows="5" name="learned" placeholder="{{ edeet.learned }}"></textarea>
+                    <textarea id="learned" rows="5" name="learned">{{ edeet.learned }}</textarea>
                     <label for="resources">Resources to Remember</label>
-                    <textarea id="resources" rows="5" name="resources" placeholder="{{ edeet.resources}}"></textarea>
+                    <textarea id="resources" rows="5" name="resources">{{ edeet.resources}}</textarea>
                     <button type="submit" id="submit">Save Entry!</button>
                     <a href="{{ url_for('index')}}" class="button button-secondary">Cancel</a>
                 </form>
