@@ -65,12 +65,23 @@ class PostForm(Form):
             DataRequired(),
             Length(message='Title should be less than 150 chars.', max=150)
         ])
-    learned = TextAreaField("What did you learn?",
-                            validators=[DataRequired()])
-    resources = TextAreaField("Resources to remember?",
-                              validators=[DataRequired()])
-    minutes = IntegerField("Minutes spent studying",
-                           validators=[DataRequired()])
-    datestamp = DateField("Date: 1983-07-21",
-                          # format='%Y-%m-%d',
-                          validators=[DataRequired()])
+    learned = TextAreaField(
+        "What did you learn?",
+        validators=[DataRequired()]
+    )
+    resources = TextAreaField(
+        "Resources to remember?",
+        validators=[DataRequired()]
+    )
+    minutes = IntegerField(
+        "Minutes spent studying",
+        validators=[DataRequired()]
+    )
+    datestamp = DateField(
+        "Date: 1983-07-21",
+        validators=[DataRequired()])
+    tags = StringField(
+        "Tags",
+        validators=[
+            Length(message='Tags must be less than 50 chars.', max=50)
+        ])

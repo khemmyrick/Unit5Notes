@@ -1,28 +1,27 @@
 {% extends "layout.html" %}
-{% block title %}{{ super() }} | {% for post in stream %}{{ post.title }}{% endfor %}{% endblock %}
-{% block header %}{% for post in stream %}{{ post.title }}{% endfor %}{% endblock %}
+{% block title %}{{ super() }} | {{ deets.title }}{% endblock %}
+{% block header %}{{ deets.title }}{% endblock %}
 {% block content %}
-    {% for post in stream %}
         <section>
             <div class="container">
                 <div class="entry-list single">
                     <article>
-                        <h1>{{ post.title }}</h1>
-                        <time datetime="{{ post.datestamp.strftime('%Y-%m-%d') }}">{{ post.datestamp.strftime('%b %d, %Y') }}</time>
+                        <h1>{{ deets.title }}</h1>
+                        <time datetime="{{ deets.datestamp.strftime('%Y-%m-%d') }}">{{ deets.datestamp.strftime('%b %d, %Y') }}</time>
                         <div class="entry">
                             <p><strong>Time Spent: </strong>
-                            {{ post.minutes }}</p>
+                            {{ deets.minutes }}</p>
                         </div>
                         <div class="entry">
                             <p><strong>What I Learned: </strong>
-                            {{ post.learned }}</p>
+                            {{ deets.learned|safe }}</p>
                             <!-- <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ut rhoncus felis, vel tincidunt neque.</p>
                             <p>Cras egestas ac ipsum in posuere. Fusce suscipit, libero id malesuada placerat, orci velit semper metus, quis pulvinar sem nunc vel augue. In ornare tempor metus, sit amet congue justo porta et. Etiam pretium, sapien non fermentum consequat, <a href="">dolor augue</a> gravida lacus, non accumsan. Vestibulum ut metus eleifend, malesuada nisl at, scelerisque sapien.</p> -->
                         </div>
                         <div class="entry">
                             <strong>Resources to Remember: </strong>
-                            {{ post.resources }}
-                            <!-- How do I escape (or un-escape) html code in these jinja variables? If i put the jinja variable in a raw block, it'll just print the double stache and the name of the variable, rather than html code.  If I add html code to the string in python/flask and output it that way, jinja or flask auto-escape everything as text to be read by the user, and not the html code.
+                            {{ deets.resources|safe }}
+                            <!-- 
                             <ul>
                                 <li><a href="">Lorem ipsum dolor sit amet</a></li>
                                 <li><a href="">Cras accumsan cursus ante, non dapibus tempor</a></li>
@@ -35,11 +34,10 @@
                 </div>
             </div>
             <div>
-                <p><a href="{{ url_for('post', post_id=post.id) }}">Edit Entry</a></p>
+                <p><a href="{{ url_for('post', post_slug=deets.slug) }}">Edit Entry</a></p>
             </div>
             <div>
-                <p><a href="{{ url_for('delete', post_id=post.id) }}">Delete Entry</a></p>
+                <p><a href="{{ url_for('delete', post_slug=deets.slug) }}">Delete Entry</a></p>
             </div>
         </section>
-    {% endfor %}
 {% endblock %}

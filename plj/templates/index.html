@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block header %}{{ super() }}<br><br>
-    {% if current_user.is_authenticated() %}
+    {% if current_user.is_authenticated %}
         <h6>You are currently logged-in.</h6>
         <a href="{{ url_for('logout') }}" class="icon-power" title="log out"> 
         Log Out</a>
@@ -9,7 +9,7 @@
         <a href="{{ url_for('login') }}" class="icon-power" title="log in">Log In</a>
     <!-- <a href="***jinja2doublestache url_for('register') ***" class="icon-profile" title="register">Register</a> -->
     {% endif %}
-    {% if current_user.is_authenticated() %}
+    {% if current_user.is_authenticated %}
     <br><br><a class="button icon-right" href="{{ url_for('post') }}"><span>New Entry</span> <i class="material-icons">add</i></a>
     {% endif %}
 {% endblock %}
@@ -22,12 +22,10 @@
                     <article>
                         <!-- Generate slugs. -->
                         <h2><br>
-                            <a href="{{ url_for('view_post', post_id=post.id)}}" class="view">{{ post.title }}</a>
+                            <a href="{{ url_for('view_post', post_slug=post.slug)}}" class="view">{{ post.title }}</a>
                         </h2>
-                        <a href="{{ url_for('view_post', post_id=post.id) }}" class="view"><time datetime="{ post.datestamp.strftime('%Y-%m-%d') }">{{ post.datestamp.strftime('%Y-%m-%d') }}</time><br>View Full Entry</a>
+                        <a href="{{ url_for('view_post', post_slug=post.slug) }}" class="view"><time datetime="{ post.datestamp.strftime('%Y-%m-%d') }">{{ post.datestamp.strftime('%Y-%m-%d') }}</time><br>View Full Entry</a>
                         <!-- Insert year/month/day datetime. -->
-                        {% if singular %}
-                        {% endif %}
                     </article>
                 {% endfor %}
                 </div>

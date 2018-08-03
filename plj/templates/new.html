@@ -14,12 +14,15 @@
                     <input id="datestamp" type="date" name="datestamp"><br>
                     <label for="minutes"> Time Spent</label>
                     <input id="minutes" type="text" name="minutes" placeholder="{{ form.minutes.label.text }}"><br>
-                    <label for="learned">What I Learned</label><!-- <h5> (To add a link, type "[" followed by the URL, a space, a description of what's being linked to, and finally "]".)</h5> -->
+                    <label for="learned">What I Learned</label>
+                    <!-- Turns out, IDK how to turn a jinja/flask input loaded by a python function and saved to a peewee model into an html anchor tag.  I tried to test just making a model attribute an a href tag, and it rendeered it as text. Jinja or Flask must be automatically replacing the actual text with html escape characters.  -->
                     <textarea id="learned" rows="5" name="learned" placeholder="{{ form.learned.label.text }}"></textarea>
                     <label for="resources">Resources to Remember</label>
+                    <h5>[If resource is a link, simply type in url.  Seperate resources by pressing 'enter' or 'return'.]</h5>
                     <textarea id="resources" rows="5" name="resources" placeholder="{{ form.resources.label.text }}"></textarea>
-                    <!-- <label for="tags"> Tags (N/A)</label>
-                    <input id="tags" type="text" name="tags"><br> Tags isn't in my form model.-->
+                    <label for="tags"> Tags </label>
+                    <h5>[Seperate your tags with commas.]</h5>
+                    <input id="tags" type="text" name="tags"><br>
                     <button type="submit" id="submit">Publish Entry!</button>
                     <!-- <input type="submit" value="Publish Entry" class="button"> This maybe didn't work -->
                     <a href="{{ url_for('index') }}" class="button button-secondary">Cancel</a>

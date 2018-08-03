@@ -13,6 +13,7 @@
                     <label for="title"> Title</label>
                     <input id="title" type="text" name="title" value="{{ edeet.title }}"><br>
                     <label for="datestamp">Date</label>
+					<h5>Previous Setting: {{ edeet.datestamp.strftime('%b %d, %Y') }}</h5>
                     <input id="datestamp" type="date" name="datestamp" value="{{ edeet.datestamp }}"><br>
                     <label for="minutes"> Time Spent</label>
                     <input id="minutes" type="text" name="minutes" value="{{ edeet.minutes }}"><br>
@@ -20,6 +21,9 @@
                     <textarea id="learned" rows="5" name="learned">{{ edeet.learned }}</textarea>
                     <label for="resources">Resources to Remember</label>
                     <textarea id="resources" rows="5" name="resources">{{ edeet.resources}}</textarea>
+                    <label for="tags"> More Tags </label>
+                    <h6>Current Tags:</h6><h5>|{% for etag in etags %} {{ etag }} |{% endfor %}</h5>
+                    <input id="tags" type="text" name="tags"><br>
                     <button type="submit" id="submit">Save Entry!</button>
                     <a href="{{ url_for('index')}}" class="button button-secondary">Cancel</a>
                 </form>

@@ -1,10 +1,12 @@
 import re
 
+import urllib.request
+from bs4 import BeautifulSoup
 from flask import (Flask, g, render_template, flash, redirect, url_for,
                    abort)
-from flask.ext.bcrypt import check_password_hash
-from flask.ext.login import (LoginManager, login_user, logout_user,
-                             login_required, current_user)
+from flask_bcrypt import check_password_hash
+from flask_login import (LoginManager, login_user, logout_user,
+                         login_required, current_user)
 
 import forms
 import models
@@ -14,7 +16,7 @@ PORT = 8000
 HOST = '0.0.0.0'
 
 app = Flask(__name__)
-app.secret_key = 'auoesh.bouoastuh.43,uoausoehuosth3ououea.auoub!'
+app.secret_key = 'aumesh.boquoastuh.43,uoawu4opuosth3ou1npa.auboub!'
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -54,7 +56,6 @@ def login():
             user = models.User.select().get()
         except models.DoesNotExist:
             flash("Your credentials are invalid.", "error")
-            return 'i do not see your model'
         else:
             if check_password_hash(user.password, form.password.data):
                 login_user(user)
@@ -75,37 +76,44 @@ def logout():
 
 
 @app.route('/entry', methods=('GET', 'POST'))
-@app.route('/entries/edit/<int:post_id>', methods=('GET', 'POST'))
+@app.route('/entries/edit/<post_slug>', methods=('GET', 'POST'))
 @login_required
-def post(post_id=None):
+def post(post_slug=None):
     """Add/Edit an entry to the stream."""
     form = forms.PostForm()
-    if post_id:
+    if post_slug:
         try:
-            edeet = models.Post.select().where(models.Post.id == post_id).get()
+            edeet = models.Post.select().where(
+              models.post.slug == post_slug
+            ).get()
         except models.DoesNotExist:
-            flash("We got a Does Not Exist error on that post_id.")
-            return redirect(url_for('index'))
+            abort(404)
         else:
+            etags = edeet.all_tags()
             if form.validate_on_submit():
                 edeet.title = form.title.data
-                edeet.learned = mark_up(form.learned.data)
-                edeet.resources = form.resources.data
+                edeet.learned = link_it(form.learned.data)
+                edeet.resources = link_it(r_lister(form.resources.data))
                 edeet.minutes = form.minutes.data
                 edeet.datestamp = form.datestamp.data
                 edeet.save()
+                tag_maker(form, edeet)
                 flash("Message saved.", "success")
                 return redirect(url_for('index'))
         if edeet:
-            return render_template('edit.html', form=form, edeet=edeet)
+            return render_template('edit.html', form=form, edeet=edeet, etags=etags)
         else:
-            return 'something went wrong'
+            abort(404)
     elif form.validate_on_submit():
-        models.Post.create(title=form.title.data,
-                           learned=mark_up(form.learned.data),
-                           resources=form.resources.data,
-                           minutes=form.minutes.data,
-                           datestamp=form.datestamp.data)
+        new_post = models.Post.create(
+          title=form.title.data,
+          learned=link_it(form.learned.data),
+          resources=link_it(r_lister(form.resources.data)),
+          minutes=form.minutes.data,
+          datestamp=form.datestamp.data,
+          slug=slugify(form.title.data)
+        )
+        tag_maker(form, new_post)
         flash("Message posted. Thanks!", "success")
         return redirect(url_for('index'))
     return render_template('new.html', form=form)
@@ -113,20 +121,28 @@ def post(post_id=None):
 
 @app.route('/')
 @app.route('/entries')
-def index():
+@app.route('/entries/tag/<tagname>')
+def index(tagname=None):
     """Populates stream.html with db posts."""
-    stream = models.Post.select().limit(100)
+    if tagname:
+        tag_target = models.Tag.select().where(
+          models.Tag.slug == tagname
+        ).get()
+        stream = tag_target.all_posts()
+    else:
+        stream = models.Post.select().limit(100)
+    # Passes first 100 db posts to stream.
     return render_template('index.html', stream=stream)
 
 
-@app.route('/entries/delete/<int:post_id>')
+@app.route('/entries/delete/<post_slug>')
 @login_required
-def delete(post_id):
+def delete(post_slug):
     """Delete an entry from our db."""
     try:
-        dleet = models.Post.select().where(models.Post.id == post_id).get()
+        dleet = models.Post.select().where(models.post.slug == post_slug).get()
     except models.DoesNotExist:
-        flash("We got a Does Not Exist error on that post_id.")
+        flash("Can't delete what isn't there.")
         return redirect(url_for('index'))
     else:
         dleet.delete_instance()
@@ -134,18 +150,17 @@ def delete(post_id):
         return redirect(url_for('index'))
 
 
-@app.route('/details/<int:post_id>')
+@app.route('/details/<post_slug>')
 @login_required
-def view_post(post_id):
+def view_post(post_slug):
     """View a specific post (in detail)."""
-    posts = models.Post.select().where(models.Post.id == post_id)
-    if posts.count() == 0:
+    try:
+        deets = models.Post.select().where(models.post.slug == post_slug).get()
+    except models.DoesNotExist:
         abort(404)
-    if posts.count() == 1:
-        singular = True
     else:
-        singular = False
-    return render_template('detail.html', stream=posts, singular=singular)
+        tags = deets.all_tags()
+    return render_template('detail.html', deets=deets, tags=tags)
 
 
 @app.errorhandler(404)
@@ -154,19 +169,65 @@ def not_found(error):
     return render_template('404.html'), 404
 
 
-def mark_up(learned):
+def tag_maker(form, post):
+    """Add tag instances to the db."""
+    tag_list = form.tags.data.split(',')
+    tag_list = set(tag_list)
+    tag_list = list(tag_list)
+    for tag in tag_list:
+        try:
+            add_tag = models.Tag.select().where(
+              models.Tag.term == tag.strip()
+            ).get()
+        except models.DoesNotExist:
+            add_tag = models.Tag.create(term=tag.strip(),
+                                        slug=slugify(tag))
+        finally:
+            models.TagTrend.create(post_call=add_tag,
+                                   tag_by=post)
+    return
+
+
+def link_it(learned):
     """Apply anchor tags to certain user inputs."""
     final_string = learned
-    l_list = re.findall(r'^(\[[\w+:/.]+ [\w+ ,.]\])$', learned)
-    # Not sure how to get the proper regex pattern for this.
+    l_list = re.findall(r'(http\S+)', learned)
     if l_list:
         for a_tag in l_list:
-            newstr = a_tag.replace('[', '<a href="')
-            newstr = newstr.replace(' ', '">', 1)
-            newstr = newstr.replace(']', '</a>')
+            a_page = urllib.request.urlopen(a_tag)
+            html = BeautifulSoup(a_page.read(), "html.parser")
+            newstr = '<a href="{}">{}</a>'.format(a_tag, html.title.string)
             final_string = final_string.replace(a_tag, newstr)
         learned = final_string
     return learned
+
+
+def r_lister(resources):
+    final_string = resources
+    if len(re.findall(r'([\S ]+\r)', resources)) > 1:
+        final_string = "{}\r".format(final_string)
+        r_list = re.findall(r'([\S ]+\r)', final_string)
+        for reso in r_list:
+            newreso = '<li>{}</li>'.format(reso)
+            final_string = final_string.replace(reso, newreso)
+        final_string = '<ul>{}</ul>'.format(final_string)
+    return final_string
+
+
+def slugify(o_str):
+    """Spawn slugs."""
+    o_str = o_str.lower()
+    for chara in [' ', '-', '.', '/']:
+        o_str = o_str.replace(chara, '_')
+    o_str = re.sub('\W', '', o_str)
+    # Delete non-word characters, other than ones caught by previous line.
+    # This would also catch spaces, hence swapping them out for unders.
+    o_str = o_str.replace('_', ' ')
+    o_str = re.sub('\s+', ' ', o_str)
+    # Replace any instances of multiple spaces with a single space.
+    o_str = o_str.strip()
+    o_str = o_str.replace(' ', '-')
+    return o_str
 
 
 if __name__ == '__main__':
