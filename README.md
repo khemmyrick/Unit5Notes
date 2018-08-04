@@ -16,6 +16,7 @@ The password is "project5"
 # Just did:
 1. Reunited a tuple with its long lost comma.
 2. Played musical chairs with models.py initialize() function.
+3. DRYed up tag functions in app.py.
 
 # Next steps:
 1. Review
