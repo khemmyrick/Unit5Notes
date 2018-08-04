@@ -84,12 +84,14 @@ def post(post_slug=None):
     if post_slug:
         try:
             edeet = models.Post.select().where(
-              models.post.slug == post_slug
+              models.Post.slug == post_slug
             ).get()
         except models.DoesNotExist:
             abort(404)
         else:
             etags = edeet.all_tags()
+            edeet.learned = retext(edeet.learned)
+            edeet.resources = retext(edeet.resources)
             if form.validate_on_submit():
                 edeet.title = form.title.data
                 edeet.learned = link_it(form.learned.data)
@@ -97,7 +99,7 @@ def post(post_slug=None):
                 edeet.minutes = form.minutes.data
                 edeet.datestamp = form.datestamp.data
                 edeet.save()
-                tag_maker(form, edeet)
+                tag_editer(form, edeet, etags)
                 flash("Message saved.", "success")
                 return redirect(url_for('index'))
         if edeet:
@@ -140,7 +142,7 @@ def index(tagname=None):
 def delete(post_slug):
     """Delete an entry from our db."""
     try:
-        dleet = models.Post.select().where(models.post.slug == post_slug).get()
+        dleet = models.Post.select().where(models.Post.slug == post_slug).get()
     except models.DoesNotExist:
         flash("Can't delete what isn't there.")
         return redirect(url_for('index'))
@@ -155,7 +157,7 @@ def delete(post_slug):
 def view_post(post_slug):
     """View a specific post (in detail)."""
     try:
-        deets = models.Post.select().where(models.post.slug == post_slug).get()
+        deets = models.Post.select().where(models.Post.slug == post_slug).get()
     except models.DoesNotExist:
         abort(404)
     else:
@@ -171,20 +173,47 @@ def not_found(error):
 
 def tag_maker(form, post):
     """Add tag instances to the db."""
+    tag_list = tag_splitter(form)
+    tag_save_edit(tag_list, post)
+    return
+	
+def tag_editer(form, post, etags):
+    """Add tag instances to the db."""
+    tag_list = tag_splitter(form)
+    for etag in etags:
+        if etag.term not in tag_list:
+            try:
+                models.TagTrend.get(post_call=etag,
+                                    tag_by=post).delete_instance()
+            except models.IntegrityError:
+                pass
+    tag_save_edit(tag_list, post)
+    return
+
+
+def tag_splitter(form):
     tag_list = form.tags.data.split(',')
     tag_list = set(tag_list)
     tag_list = list(tag_list)
+    return tag_list
+
+
+def tag_save_edit(tag_list, post):
     for tag in tag_list:
-        try:
-            add_tag = models.Tag.select().where(
-              models.Tag.term == tag.strip()
-            ).get()
-        except models.DoesNotExist:
-            add_tag = models.Tag.create(term=tag.strip(),
-                                        slug=slugify(tag))
-        finally:
-            models.TagTrend.create(post_call=add_tag,
-                                   tag_by=post)
+        if re.search(r'\S+', tag):
+            try:
+                add_tag = models.Tag.select().where(
+                  models.Tag.term == tag.strip()
+                ).get()
+            except models.DoesNotExist:
+                add_tag = models.Tag.create(term=tag.strip(),
+                                            slug=slugify(tag))
+            finally:
+                try:
+                    models.TagTrend.create(post_call=add_tag,
+                                           tag_by=post)
+                except models.IntegrityError:
+                    pass
     return
 
 
@@ -212,6 +241,12 @@ def r_lister(resources):
             final_string = final_string.replace(reso, newreso)
         final_string = '<ul>{}</ul>'.format(final_string)
     return final_string
+
+
+def retext(h_string):
+    """Remove html tags from a string"""
+    marked = re.compile('<.*?>')
+    return re.sub(marked, '', h_string)
 
 
 def slugify(o_str):

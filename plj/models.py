@@ -86,8 +86,13 @@ class TagTrend(Model):
     class Meta:
         database = DATABASE
         indexes = (
-            (('post_call', 'tag_by'), True)
-        )
+            (('post_call', 'tag_by'), True),
+        )  # Item passed to indexes, within OUTERMOST parens MUST BE TUPLE.
+
+
+def create_tables():
+    with DATABASE:
+        DATABASE.create_tables([User, Post, Tag, TagTrend], safe=True)
 
 
 def initialize():
@@ -95,3 +100,7 @@ def initialize():
     DATABASE.connection()
     DATABASE.create_tables([User, Post, Tag, TagTrend], safe=True)
     DATABASE.close()
+    # try:
+    #    create_tables()
+    # except KeyError:  # I don't know that I need this except block anymore.
+    #    pass  # Also, I don't know that I don't.

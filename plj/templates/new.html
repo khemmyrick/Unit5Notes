@@ -15,7 +15,7 @@
                     <label for="minutes"> Time Spent</label>
                     <input id="minutes" type="text" name="minutes" placeholder="{{ form.minutes.label.text }}"><br>
                     <label for="learned">What I Learned</label>
-                    <!-- Turns out, IDK how to turn a jinja/flask input loaded by a python function and saved to a peewee model into an html anchor tag.  I tried to test just making a model attribute an a href tag, and it rendeered it as text. Jinja or Flask must be automatically replacing the actual text with html escape characters.  -->
+					<h5>[To include a link, simply type in url. The link will display as the title of its webpage.]</h5>
                     <textarea id="learned" rows="5" name="learned" placeholder="{{ form.learned.label.text }}"></textarea>
                     <label for="resources">Resources to Remember</label>
                     <h5>[If resource is a link, simply type in url.  Seperate resources by pressing 'enter' or 'return'.]</h5>

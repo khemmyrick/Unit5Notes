@@ -9,15 +9,15 @@ The password is "project5"
 5. A forms module.
 
 # Current functionality:
-0. My DATABASE.create_tables() command is throwing a "KeyError: 'p'" exception.
+1. Password protected locally hosted webjournal app.
+2. Allows a user to record entries with a title, what they learned, a list of resources, and a list of tags.
+3. Users can edit or delete entries as they see fit.
 
 # Just did:
-1. Added slugify function to app in Treehouse Workspace.
-2. Added HTML parsing to display webpage titles on home computer.
-3. Added simple html adjustments to main string attributes of Post model.
-4. Attempted to consolodate last missing pieces of program into coherent whole.
-5. Attempted to follow traceback error inside of peewee.py file to see what Key it was looking for.
+1. Reunited a tuple with its long lost comma.
+2. Played musical chairs with models.py initialize() function.
 
 # Next steps:
-1. Seeking help.
-2. Documenting which modules/versions are needed to make app work.
+1. Review
+2. Finishing Touches
+3. Submit project.

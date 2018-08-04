@@ -30,6 +30,11 @@
                             </ul> 
                             -->
                         </div>
+						<div class="entry">
+                            <strong>Tags: </strong>
+                            <h6>| {% for tag in tags %}<a href="{{ url_for('index', tagname=tag.slug) }}">{{ tag.term }}</a> |
+                            {% endfor %}</h6>
+                        </div>
                     </article>
                 </div>
             </div>
