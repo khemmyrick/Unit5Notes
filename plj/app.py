@@ -94,7 +94,7 @@ def post(post_slug=None):
             edeet.resources = retext(edeet.resources)
             if form.validate_on_submit():
                 edeet.title = form.title.data
-                edeet.learned = link_it(form.learned.data)
+                edeet.learned = learn_p(link_it(form.learned.data))
                 edeet.resources = link_it(r_lister(form.resources.data))
                 edeet.minutes = form.minutes.data
                 edeet.datestamp = form.datestamp.data
@@ -109,7 +109,7 @@ def post(post_slug=None):
     elif form.validate_on_submit():
         new_post = models.Post.create(
           title=form.title.data,
-          learned=link_it(form.learned.data),
+          learned=learn_p(link_it(form.learned.data)),
           resources=link_it(r_lister(form.resources.data)),
           minutes=form.minutes.data,
           datestamp=form.datestamp.data,
@@ -252,6 +252,18 @@ def r_lister(resources):
             final_string = final_string.replace(reso, newreso)
         final_string = '<ul>{}</ul>'.format(final_string)
     return final_string
+
+
+def learn_p(learn):
+    if len(re.findall(r'([\S ]+\r)', learn)) > 1:
+        learn = "{}\r".format(learn)
+        l_list = re.findall(r'([\S ]+\r)', learn)
+        for l_item in l_list:
+            new_item = '<p>{}</p>'.format(l_item)
+            learn = learn.replace(l_item, new_item)
+    else:
+        learn = '<p>{}</p>'.format(learn)	
+    return learn
 
 
 def retext(h_string):

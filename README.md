@@ -14,11 +14,9 @@ The password is "project5"
 3. Users can edit or delete entries as they see fit.
 
 # Just did:
-1. Reunited a tuple with its long lost comma.
-2. Played musical chairs with models.py initialize() function.
-3. DRYed up tag functions in app.py.
+1. Played musical chairs with models.py initialize() function.
+2. Modified title scraper function to account for mid-page links, and situations where title can't be scraped.
+3. Added function to allow carriage returns in "What I Learned" text block to render paragraph tags.
 
 # Next steps:
-1. Review
-2. Finishing Touches
-3. Submit project.
+1. Submit project.

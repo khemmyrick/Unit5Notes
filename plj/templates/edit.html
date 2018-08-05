@@ -18,10 +18,10 @@
                     <label for="minutes"> Time Spent</label>
                     <input id="minutes" type="text" name="minutes" value="{{ edeet.minutes }}"><br>
                     <label for="learned">What I Learned</label>
-					<h5>[If you're making any edits, remember to re-enter links, by typing in the url.  The link will display as the title of its webpage.]</h5>
+					<h5>If you're making any edits, remember to re-enter links, by typing in the url.  The link will display as the title of its webpage.</h5>
                     <textarea id="learned" rows="5" name="learned">{{ edeet.learned }}</textarea>
                     <label for="resources">Resources to Remember</label>
-					<h5>[If you're making any edits, remember to re-enter links, by typing in the url.  Seperate resources by pressing 'enter' or 'return'.]</h5>
+					<h5>If you're making any edits, remember to re-enter links, by typing in the url.  Seperate resources by pressing 'enter' or 'return'.</h5>
                     <textarea id="resources" rows="5" name="resources">{{ edeet.resources }}</textarea>
                     <h6>Current Tags:</h6><h4>|{% for etag in etags %} {{ etag.term }} |{% endfor %}</h4>
 					<label for="tags"> Add More Tags or Remove Current Tags </label>
