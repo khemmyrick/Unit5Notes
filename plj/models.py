@@ -8,6 +8,7 @@ DATABASE = SqliteDatabase('journal.db')
 
 
 class User(UserMixin, Model):
+    """A class for our user."""
     password = CharField(unique=True)
 
     class Meta:
@@ -46,7 +47,7 @@ class Post(Model):
         )
 
     def all_tags(self):
-        """Tags called by this post."""
+        """Return an iterable of tags called by this post."""
         return(
             Tag.select().join(
                 TagTrend, on=TagTrend.post_call
@@ -67,7 +68,7 @@ class Tag(Model):
         order_by = ('term', 'first_use')
 
     def all_posts(self):
-        """The entries that call this tag."""
+        """Return an iterable of the entries that call this tag."""
         return (
             Post.select().join(
                 TagTrend, on=TagTrend.tag_by
@@ -97,10 +98,10 @@ def create_tables():
 
 def initialize():
     """Call the connect(), create_tables() and close() method on our db."""
-    DATABASE.connection()
-    DATABASE.create_tables([User, Post, Tag, TagTrend], safe=True)
-    DATABASE.close()
-    # try:
-    #    create_tables()
-    # except KeyError:  # I don't know that I need this except block anymore.
-    #    pass  # Also, I don't know that I don't.
+    # DATABASE.connection()
+    # DATABASE.create_tables([User, Post, Tag, TagTrend], safe=True)
+    # DATABASE.close()
+    try:
+        create_tables()
+    except KeyError:  # I don't know that I need this except block anymore.
+        pass  # Also, I don't know that I don't.

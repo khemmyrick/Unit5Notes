@@ -125,7 +125,7 @@ def post(post_slug=None):
 @app.route('/entries')
 @app.route('/entries/tag/<tagname>')
 def index(tagname=None):
-    """Populates stream.html with db posts."""
+    """Populates index.html with db posts."""
     if tagname:
         tag_target = models.Tag.select().where(
           models.Tag.slug == tagname
@@ -178,7 +178,11 @@ def tag_maker(form, post):
     return
 	
 def tag_editer(form, post, etags):
-    """Add tag instances to the db."""
+    """
+    Edit tags in existing posts.
+    This removes unwantedinstances of the tag/post relationship,
+    keeps actual tags intact, and adds new tags.
+    """
     tag_list = tag_splitter(form)
     for etag in etags:
         if etag.term not in tag_list:
@@ -192,6 +196,7 @@ def tag_editer(form, post, etags):
 
 
 def tag_splitter(form):
+    """Return a list of tags from user's comma seperated input."""
     tag_list = form.tags.data.split(',')
     tag_list = set(tag_list)
     tag_list = list(tag_list)
@@ -199,6 +204,7 @@ def tag_splitter(form):
 
 
 def tag_save_edit(tag_list, post):
+    """Saves new or existing tags."""
     for tag in tag_list:
         if re.search(r'\S+', tag):
             try:
@@ -223,15 +229,20 @@ def link_it(learned):
     l_list = re.findall(r'(http\S+)', learned)
     if l_list:
         for a_tag in l_list:
-            a_page = urllib.request.urlopen(a_tag)
+            a_title = a_tag.split('#')
+            a_page = urllib.request.urlopen(a_title[0])
             html = BeautifulSoup(a_page.read(), "html.parser")
-            newstr = '<a href="{}">{}</a>'.format(a_tag, html.title.string)
+            if html.title:
+                newstr = '<a href="{}">{}</a>'.format(a_tag, html.title.string)
+            else:
+                newstr = '<a href="{}">{}</a>'.format(a_tag, a_title[0])
             final_string = final_string.replace(a_tag, newstr)
         learned = final_string
     return learned
 
 
 def r_lister(resources):
+    """Applies unordered list tags to resources string."""
     final_string = resources
     if len(re.findall(r'([\S ]+\r)', resources)) > 1:
         final_string = "{}\r".format(final_string)
